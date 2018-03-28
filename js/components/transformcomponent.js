@@ -30,9 +30,31 @@ class TransformComponent extends EntityComponent {
 
         return q;
     }
+    translateToLocal(pos) {
+        var res = vec3.create();
+        vec3.transformMat4(
+            res, 
+            pos,
+            this.getInvWorldTransform()
+        );
+        return res;
+    }
+    translateToWorld(pos) {
+        var res = vec3.create();
+        var originMat = mat4.create();
+        mat4.fromTranslation(originMat, this.getWorldTranslation());
+        vec3.transformMat4(res, pos, originMat);
+        return res;
+    }
     getWorldTranslation() {
         var res = vec3.create();
         mat4.getTranslation(res, this.worldTransform);
+        return res;
+    }
+
+    getInvWorldTransform() {
+        var res = mat4.create();
+        mat4.invert(res, this.worldTransform);
         return res;
     }
 

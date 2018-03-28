@@ -11,138 +11,38 @@ var RockMesh = () => {
     const shadeColor = [0.137, 0.133, 0.133, 1.0];
     const darkColor = [0.094, 0.09, 0.086, 1.0];
 
-    const faceColors = [
-        primaryColor,    // Back bottom
-        primaryColor,    // Back middle
-        primaryColor,    // Left panel
-        primaryColor,    // Right Panel
-        highlightColor,    // Top side left
-        highlightColor,    // Top side right
-        primaryColor,    // Top
-        highlightColor,    // Bottom side left
-        highlightColor,    // Bottom side left
-        primaryColor,    // Bottom
-        shadeColor,
-        shadeColor,
-        shadeColor,
-        shadeColor,
-        shadeColor
+    const colors = [
+
     ];
     const indices = [
-        0,  1,  2,      0,  2,  3,    // front
-        3,  4,  5,      2,  3,  5,
-        4,  5,  6,      5,  6,  7,
-
-        8,  9, 10,      8,  9, 11,
-
-        12, 13, 14,     12, 14, 15,
-
-        16, 17, 18,      16, 18, 19,
-
-        20, 21, 22,     20, 22, 23,
-
-        24, 25, 26,     24, 26, 27,
-
-        28, 29, 30,      28, 30, 31,
-
-        32, 33, 34,      32, 34, 35,
-
-        36, 37, 38,      36, 38, 39,
-
-        // Main thruster.
-        40, 41, 42,      40, 42, 43, // Top
-        40, 44, 45,      40, 45, 41, // Left
-        42, 46, 47,      42, 47, 43, // Right
-        44, 45, 46,      44, 46, 47, // Bottom
-        48, 49, 50,      48, 50, 51, // Inner top
-        52, 53, 54,      52, 54, 55, // Inner bottom
-        48, 52, 53,      48, 53, 49, // Inner left
-        41, 49, 50,      41, 50, 42, // Front top.
+        0, 1, 2, 2, 3, 0, //Base
+        4, 5, 6, 6, 7, 4, //Base
+        0, 4, 8, //Front
+        3, 7, 8,
+        4, 7, 8,
+        1, 5, 9,
+        2, 6, 9,
+        5, 6, 9,
+        0, 4, 10,
+        1, 5, 10,
+        4, 5, 10,
+        3, 7, 11,
+        2, 6, 11,
+        6, 7, 11
     ];
     const vertices = [
-        // Back panel bottom.
-        -0.25, bottom,  back,
-         0.25, bottom,  back,
-         right, bottom + 0.25,  back,
-         left, bottom + 0.25,  back, // 3
-
-        // Back panel bottom.
-         left,  top - 0.25,  back,
-         right,  top - 0.25,  back,
-        -0.25,  top,  back,
-         0.25,  top,  back, // 7
-
-         // Left panel.
-         left, bottom + 0.25, front,
-         left,  top - 0.25,  back,
-         left,  top - 0.25,  front,
-         left, bottom + 0.25, back, // 11
-
-        // Right panel
-        right, bottom + 0.25, front,
-        right, top - 0.25,  front,
-        right, top - 0.25,  back,
-        right, bottom + 0.25,  back,// 15
-
-        // Left top panel.
-        -0.25,  top,  back,
-        left,  top - 0.25,  back,
-        left,  top - 0.25,  front,
-        -0.25,  top,  back, // 19
-
-        // Right top panel.
-        right,  top - 0.25,  front,
-        right,  top - 0.25,  back,
-        0.25,  top,  back,
-        right,  top - 0.25,  front, // 23
-
-        // Top panel.
-       -0.25,  top,  back,
-        left,  top - 0.25,  front,
-        right, top - 0.25,  front,
-        0.25,  top,  back, // 27
-
-        // Left bottom panel.
-        left, bottom + 0.25,  back,
-        left, bottom + 0.25, front,
-        -0.25, bottom, back,
-        left, bottom + 0.25, front, // 31
-
-        // Right bottom panel.
-        right, bottom + 0.25,  back,
-        right, bottom + 0.25, front,
-        0.25, bottom, back,
-        right, bottom + 0.25,  front, // 35
-
-        // Bottom panel.
-        -0.25, bottom,  back,
-         left, bottom + 0.25,  front,
-         right, bottom + 0.25,  front,
-         0.25, bottom,  back, // 39
-
-       // Thruster top
-       -0.25, top, back,
-       -0.25, top, back + 0.25,
-        0.25, top, back + 0.25,
-        0.25, top, back, // 43
-
-      // Thruster bottom
-      -0.25, bottom, back,
-      -0.25, bottom, back + 0.25,
-       0.25, bottom, back + 0.25,
-       0.25, bottom, back, // 47
-
-     // Thruster inner top
-     -0.25 + 0.1, top - 0.1, back,
-     -0.25 + 0.1, top - 0.1, back + 0.25,
-      0.25 - 0.1, top - 0.1, back + 0.25,
-      0.25 - 0.1, top - 0.1, back, // 51
-
-      // Thruster inner bottom
-      -0.25 + 0.1, bottom + 0.1, back,
-      -0.25 + 0.1, bottom + 0.1, back + 0.25,
-       0.25 - 0.1, bottom + 0.1, back + 0.25,
-       0.25 - 0.1, bottom + 0.1, back, // 55
+        -1.0, 0.0, 1.0, //0 LBL
+        -1.0, 0.0, -1.0, //1 LTL
+        1.0, 0.0, -1.0, //2 LTR
+        1.0, 0.0, 1.0, //3 - LBR
+        -0.5, 1.0, 0.5, //4 UBL
+        -0.5, 1.0, -0.5, //5 UTL
+        0.5, 1.0, -0.5, //6 UTR
+        0.5, 1.0, 0.5, //7 - UBR
+        0.0, 0.0, 0.5, //8 - LCF
+        0.0, 0.0, -0.5,//9 - LCB
+        -0.5, 0.0, 0.0, //10 - LCL
+        0.5, 0.0, 0.0 //11 - LCR
     ];
 
     return {
@@ -150,8 +50,8 @@ var RockMesh = () => {
         vertices: () => { return vertices; },
         color: () => {
             var c = [];
-            for(var j = 0; j < faceColors.length; ++j) {
-                const color = faceColors[j];
+            for(var j = 0; j < vertices.length; ++j) {
+                const color = ROCK.serialize();
                 c = c.concat(color, color, color, color);
             }
             return c;

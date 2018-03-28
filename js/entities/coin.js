@@ -1,6 +1,6 @@
-class Tree extends Entity {
+class Coin extends Entity {
     constructor(eid, owner) {
-        super(eid, owner, EntityType.ENTITY_TREE);
+        super(eid, owner, EntityType.ENTITY_COIN);
 
         // Add components.
         this.componentFactory.construct(ComponentID.COMPONENT_TRANSFORM);
@@ -11,21 +11,29 @@ class Tree extends Entity {
         this.physicsComponent = this.getComponent(ComponentID.COMPONENT_PHYSICS);
         this.meshComponent = this.getComponent(ComponentID.COMPONENT_MESH);
 
-        this.physicsComponent.collisionType = CollisionType.COLLISION_SOLID;
-        this.transformComponent.absOrigin = vec3.fromValues(0, 11, 0);
+        this.physicsComponent.collisionType = CollisionType.COLLISION_TRIGGER;
+        this.bounceAngle = 0;
+
+        this.bounceSpeed = Math.randomRange(25, 75);
+        this.bounceRadius = Math.randomRange(2, 3);
     }
+
     onCollisionOverlap(other) {
 
     }
+
     tick(dt) {
+        this.bounceAngle += this.bounceSpeed * dt;
+        this.transformComponent.absOrigin[Math.Y] = 5 + (Math.sin(Math.radians(this.bounceAngle)) * this.bounceRadius);
+        this.physicsComponent.physicsSimulate(dt);
         this.transformComponent.updateTransform();
         super.tick(dt);
     }
 };
 
-EntityType.ENTITY_TREE.construction = (owner) => {
+EntityType.ENTITY_COIN.construction = (owner) => {
     var globals = GlobalVars.getInstance();
-    return new Tree(
+    return new Coin(
         newID++,
         owner
     );

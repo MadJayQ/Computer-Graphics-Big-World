@@ -32,8 +32,10 @@
     <script src="js/entities/tree.js"></script>
     <script src="js/entities/player.js"></script>
     <script src="js/entities/rock.js"></script>
+    <script src="js/entities/coin.js"></script>
 
     <!-- Include js mesh files -->
+    <script src="js/meshes/coin.js"></script>
     <script src="js/meshes/tree.js"></script>
     <script src="js/meshes/rock.js"></script>
     <script src="js/meshes/ground.js"></script>
@@ -46,7 +48,7 @@
     <canvas id="glcanvas"></canvas>
     <script>
       var debug = null; //This variable exists so that we can print information about our "main class" in console without jQuery getting in our way.
-      var drawAABB = false;
+      var drawAABB = true;
       $(document).ready(() => {
         // Setup initial AJAX settings.
         $.ajaxSetup({

@@ -66,6 +66,7 @@ class App {
     var assets = Assets.getInstance();
     assets.addModel(this.gl, TreeMesh(), "tree");
     assets.addModel(this.gl, RockMesh(), "rock");
+    assets.addModel(this.gl, CoinMesh(), "coin");
     assets.addModel(this.gl, GroundMesh(2000, 450), "ground");
 
     // Create game world entity.
@@ -78,8 +79,7 @@ class App {
     // Create player entity.
     this.player = new Entity.Factory(this.gameworld).ofType(EntityType.ENTITY_PLAYER);
     this.player.physicsComponent.aabb = new AABB(this.player, 5, 20, 5);
-    this.player.physicsComponent.aabb.translation[Math.Y] = -10;
-
+    this.player.physicsComponent.aabb.translation[Math.Y] = 0;
     // Create camera entity.
     this.player.camera = new Entity.Factory(this.player).ofType(EntityType.ENTITY_CAMERA);
     this.player.camera.boomAngle = [0, 0];
@@ -90,14 +90,37 @@ class App {
     var spawnEnt = (x, y, type, model, scalex = 1, scaley = 1, scalez = 1) => {
       var ent = entFactory.ofType(type);
       ent.meshComponent.setModel(assets.getModel(model));
-      ent.physicsComponent.aabb = new AABB(ent, 1.5, 1, 1);
       ent.transformComponent.absOrigin = vec3.fromValues(x, ent.transformComponent.absOrigin[Math.Y], y);
       ent.transformComponent.absScale = vec3.fromValues(scalex, scaley, scalez);
+      return ent;
     };
 
-    for(var i = 0; i < 450; i++) {
-      spawnEnt(Math.randInt(-2000, 2000), Math.randInt(-2000, 2000), EntityType.ENTITY_TREE, "tree", 5, 5, 5);
-      spawnEnt(Math.randInt(-2000, 2000), Math.randInt(-200, 2000), EntityType.ENTITY_ROCK, "rock", 5, 5, 5);
+    for(var i = 0; i < 300; i++) {
+      var rx = Math.randInt(-400, 400);
+      var rz = Math.randInt(-400, 400);
+      var tx = Math.randInt(-400, 400);
+      var tz = Math.randInt(-400, 400);
+      var cx = Math.randInt(-400, 400);
+      var cz = Math.randInt(-400, 400);
+      var tree = spawnEnt(tx, tz, EntityType.ENTITY_TREE, "tree", 5, 5, 5);
+      var rock = spawnEnt(rx, rz, EntityType.ENTITY_ROCK, "rock", 5, 5, 5);
+      var coin = spawnEnt(cx, cz, EntityType.ENTITY_COIN, "coin", 5, 5, 5);
+
+      tree.transformComponent.absOrigin[Math.Y] = 10;
+      tree.physicsComponent.aabb = new AABB(tree, 5, 25, 5);
+      tree.physicsComponent.aabb.origin = vec3.fromValues(tx, 0, tz);
+      tree.physicsComponent.aabb.translation = vec3.fromValues(0, 10, 0);
+
+      rock.transformComponent.absOrigin[Math.Y] = 0.1;
+      rock.physicsComponent.aabb = new AABB(rock, 10, 10, 10);
+      rock.physicsComponent.aabb.origin = vec3.fromValues(rx, 0, rz);
+      rock.physicsComponent.aabb.translation = vec3.fromValues(0, 0, 0);
+
+      coin.transformComponent.absOrigin[Math.Y] = 10;
+      coin.physicsComponent.aabb = new AABB(tree, 5, 5, 5);
+      coin.physicsComponent.aabb.origin = vec3.fromValues(cx, 0, cz);
+      coin.physicsComponent.aabb.translation = vec3.fromValues(0, 0, 0);
+      coin.physicsComponent.angularVelocity[Math.YAW] = Math.randInt(30, 75);
     }
 
 
@@ -112,7 +135,7 @@ class App {
   */
   exec() {
     var globals = GlobalVars.getInstance();
-    globals.setTickrate(240);
+    globals.setTickrate(90);
     globals.timescale = 1.0;
 
     /*

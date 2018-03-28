@@ -24,3 +24,4 @@ var WHITE = new Color(255, 255, 255, 255);
 var SKY = new Color(30, 144, 255, 255);
 var TRUNK = new Color(83, 53, 10, 255);
 var GRASS = new Color(96, 128, 56, 255);
+var ROCK = new Color(90, 77, 65, 255);

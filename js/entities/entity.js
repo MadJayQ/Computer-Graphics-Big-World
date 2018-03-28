@@ -6,6 +6,7 @@ var EntityType = {
     ENTITY_PLAYER: {id: 3},
     ENTITY_ROCK: {id: 4},
     ENTITY_TREE: {id: 5},
+    ENTITY_COIN: {id: 6}
 }
 
 var newID = 0;
@@ -24,6 +25,11 @@ class Entity {
         }
 
         this.componentFactory = new EntityComponent.ComponentFactory(this);
+    }
+
+    destroy() {
+        var cidx = this.owner.children.indexOf(this);
+        this.owner.children.splice(cidx, 1);
     }
 
     tick(dt) {

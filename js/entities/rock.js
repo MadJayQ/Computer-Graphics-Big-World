@@ -11,6 +11,8 @@ class Rock extends Entity {
         this.physicsComponent = this.getComponent(ComponentID.COMPONENT_PHYSICS);
         this.meshComponent = this.getComponent(ComponentID.COMPONENT_MESH);
 
+        this.physicsComponent.collisionType = CollisionType.COLLISION_SOLID;
+
     }
 
     onCollisionOverlap(other) {

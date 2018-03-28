@@ -23,6 +23,10 @@ class MeshComponent extends EntityComponent {
             false,
             this.owner.components[ComponentID.COMPONENT_TRANSFORM].worldTransform
         );
+        gl.uniform1i(
+            program.uniformLocation("u_ignoreLighting"),
+            0
+        );
         if(this.model.idxBuffer) {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.model.idxBuffer);
             {

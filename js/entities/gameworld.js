@@ -51,30 +51,34 @@ class GameWorld extends Entity {
         super.tick(dt);
     }
 
-    queryCollisionTree(ent) {
+    queryCollisionTree(ent, type = CollisionType.COLLISION_SOLID) {
         var collidables = [];
         var queryCollisionRecursive = (itr) =>{
-            if(itr.hasComponent(ComponentID.COMPONENT_PHYSICS)) {
-                var physicsComponent = itr.getComponent(ComponentID.COMPONENT_PHYSICS);
-                if(physicsComponent.aabb) {
-                    collidables.push(physicsComponent);
+            if(itr.eid != 0 && itr.eid != ent.eid) {
+                if(itr.hasComponent(ComponentID.COMPONENT_PHYSICS)) {
+                    var d = Math.distance(
+                        ent.transformComponent.getWorldTranslation(),
+                        itr.transformComponent.getWorldTranslation()
+                    );
+                    if(d < 20) {
+                        var physicsComponent = itr.getComponent(ComponentID.COMPONENT_PHYSICS);
+                        if(physicsComponent.collisionType == type) {
+                            if(physicsComponent.aabb) {
+                                collidables.push(physicsComponent);
+                            }
+                            if(physicsComponent.isMoving()) {
+                                collidables.push(physicsComponent);
+                            }
+                        }
+                    }
                 }
             }
             itr.children.forEach((value, index, array) => {
                 queryCollisionRecursive(value);
             });
         }
-
         queryCollisionRecursive(this);
-        var ret = false;
-        collidables.forEach((cvalue, cindex, carray) => {
-            if(ent.eid == cvalue.owner.eid) return;
-            if(ent.physicsComponent.aabb.checkCollision(cvalue.aabb)) {
-                ret = true;
-            }
-        });
-
-        return ret;
+        return collidables;
     }
     queryCollision() {
         var collidables = [];
@@ -83,18 +87,20 @@ class GameWorld extends Entity {
         var queryCollisionRecursive = (ent) => {
             if(ent.hasComponent(ComponentID.COMPONENT_PHYSICS)) {
                 var physicsComponent = ent.getComponent(ComponentID.COMPONENT_PHYSICS);
-                if(physicsComponent.aabb) {
-                    collidables.push(physicsComponent);
-                    if(physicsComponent.isMoving()) {
-                        moving.push(physicsComponent);
-                    } 
+                if(physicsComponent.collisionType !== CollisionType.COLLISION_NONE) {
+                    if(physicsComponent.aabb) {
+                        collidables.push(physicsComponent);
+                        if(physicsComponent.isMoving()) {
+                            moving.push(physicsComponent);
+                        } 
+                    }
                 }
             }
             ent.children.forEach((value, index, array) => {
                 queryCollisionRecursive(value);
             });
         };
-        //queryCollisionRecursive(this);
+        queryCollisionRecursive(this);
         moving.forEach((value, index, array) => {
             collidables.forEach((nValue, nIndex, nArray) => {
                 if(nValue.owner.eid != value.owner.eid) {
@@ -103,7 +109,6 @@ class GameWorld extends Entity {
                     ) && GlobalVars.getInstance().tickcount > 1) {
                         value.owner.onCollisionOverlap(nValue);
                         nValue.owner.onCollisionOverlap(value);
-                        console.log("COLLISION!");
                     }
                 }
             });

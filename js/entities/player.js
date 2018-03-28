@@ -35,14 +35,17 @@ class Player extends Entity {
         this.componentFactory.construct(ComponentID.COMPONENT_TRANSFORM);
         this.componentFactory.construct(ComponentID.COMPONENT_INPUT);
         this.componentFactory.construct(ComponentID.COMPONENT_PHYSICS);
+        this.componentFactory.construct(ComponentID.COMPONENT_MESH);
 
         this.transformComponent = this.getComponent(ComponentID.COMPONENT_TRANSFORM);
         this.inputComponent = this.getComponent(ComponentID.COMPONENT_INPUT);
+        this.meshComponent = this.getComponent(ComponentID.COMPONENT_MESH);
         this.physicsComponent = this.getComponent(ComponentID.COMPONENT_PHYSICS);
+        this.physicsComponent.collisionType = CollisionType.COLLISION_SOLID;
 
         this.transformComponent.absOrigin[Math.Y] = 10;
         this.accumulatedMouseDelta = vec2.fromValues(0, 0);
-        this.rotationSpeed = 30;
+        this.rotationSpeed = 15;
         
 
         /*
@@ -141,38 +144,23 @@ class Player extends Entity {
       forwardVector[Math.Z] = 0;
       sideVector[Math.Z] = 0;
 
-  
-
       this.physicsComponent.velocity[Math.X] = (forwardVector[Math.Y] * forwardMove) + (sideVector[Math.Y] * leftMove);
       this.physicsComponent.velocity[Math.Z] = (forwardVector[Math.X] * forwardMove) + (sideVector[Math.X] * leftMove);
       this.physicsComponent.velocity[Math.Y] = (forwardVector[Math.Z] * forwardMove) + (sideVector[Math.Z] * leftMove);
-
-
 
       this.accumulatedMouseDelta = vec2.fromValues(0, 0);
     }
     
     onCollisionOverlap(other) {
-      if(other.owner.type == EntityType.ENTITY_ROCK || other.owner.type == EntityType.ENTITY_TREE) {
-        this.physicsComponent.velocity = vec3.fromValues(0, 0, 0);
+      if(other.owner.type == EntityType.ENTITY_COIN) {
+        other.owner.destroy();
       }
     }
 
     tick(dt) {
         //this.physicsComponent.velocity[Math.Z] = Math.lerp(this.physicsComponent.velocity[Math.Z], -200, 0.00001);
         this.processMovement(dt);
-        var oldPos = vec3.create();
-        vec3.copy(
-          oldPos,
-          this.transformComponent.absOrigin
-        );
         this.physicsComponent.physicsSimulate(dt);
-        if(this.getGameWorld().queryCollisionTree(this)) {
-          vec3.copy(
-            this.transformComponent.absOrigin,
-            oldPos
-          );
-        }
         this.transformComponent.updateTransform();
         super.tick(dt);
     }
